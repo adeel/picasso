@@ -54,7 +54,7 @@ def _if_route(route, app):
 
 def _set_route_params(request, params):
   "Set the \"route_params\" and \"params\" keys in the request."
-  return dict(request, **{"route_params": params, "params": params})
+  return _recursive_merge(request, {"route_params": params, "params": params})
 
 def _route_matches(route, request):
   "Return the params of the route matching the request, if there is one."
@@ -75,3 +75,16 @@ def _prepare_route(route):
     return Route(None, route)
   if isinstance(route, collections.Iterable):
     return Route(None, route[0], requirements=route[1])
+
+def _recursive_merge(x, y):
+  "Merge two dictionaries recursively."
+
+  z = x.copy()
+  for key, val in y.iteritems():
+    if isinstance(val, dict):
+      if not z.has_key(key):
+        z[key] = {}
+      z[key] = _recursive_merge(z[key], val)
+    else:
+      z[key] = val
+  return z
