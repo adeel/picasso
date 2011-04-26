@@ -1,0 +1,61 @@
+"A middleware that uses the Jinja templating system to render responses."
+
+import os
+from jinja2 import Environment, FileSystemLoader
+
+def wrap_jinja(app, options={}):
+  """
+  If the app response is a tuple, will use Jinja2 to render the response.  The
+  first element of the tuple is parsed as the template name, and the second
+  should be a dictionary of data to be passed to the template.
+
+    def view_product(req, id):
+      # product = ...
+      return "products/view", {"product": product}
+
+  If sessions are enabled, a "session" key will be added to the data and sent
+  to the template.
+
+  Note that it adds a filter to the Jinja environment called 'd', which can
+  be used to output unicode strings.  (It decodes strings as UTF-8.)
+
+    <h1>{{ product.name|d|e }}</h1>
+
+  Takes a template_dir option, which should be the path to your templates.
+  """
+
+  options = dict({"template_dir": "./"}, **options)
+
+  template_dir = options["template_dir"]
+  if not os.path.isdir(template_dir):
+    raise Exception("Directory does not exist: %s" % template_dir)
+
+  def wrapped(request):
+    response = app(request)
+    if isinstance(response.get("body"), tuple):
+      if len(response["body"]) != 2:
+        raise Exception(
+          "picasso.middleware.jinja expected response to be a 2-element tuple,"
+          " but got:\n  %s" % str(response["body"]))
+
+      response["body"] = _render_with_jinja(options["template_dir"],
+        *response["body"], session=request.get("session"))
+      return response
+    else:
+      return response
+  return wrapped
+
+def _render_with_jinja(template_dir, template, data, session={}):
+  """
+  Looks for the template in template_dir, and passes data to it.  Also adds a
+  session key to the data, if session are enabled.
+  """
+  env = Environment(loader=FileSystemLoader(template_dir))
+
+  # Add session key to data, if sessions are enabled.
+  if session is not None:
+    data["session"] = session
+
+  # a filter for dealing with unicode strings
+  env.filters['d'] = lambda s: s.decode('utf-8') if s else ''
+  return env.get_template(template + '.html').render(data).encode('utf-8')
