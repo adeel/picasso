@@ -21,13 +21,14 @@ class DisappearingDict(dict):
   "Like a dict, but values disappear after the first access."
 
   def __getitem__(self, key):
-    val = dict.__getitem__(self, key)
-    self.__setitem__(key, None)
-    return val
+    return self._get_and_delete(key)
 
   def get(self, key, d=None):
     if self.has_key(key):
-      val = dict.__getitem__(self, key)
-      self.__setitem__(key, None)
-      return val
+      return self._get_and_delete(key)
     return d
+
+  def _get_and_delete(self, key):
+    val = dict.__getitem__(self, key)
+    self.__delitem__(key)
+    return val

@@ -39,22 +39,26 @@ def wrap_jinja(app, options={}):
           " but got:\n  %s" % str(response["body"]))
 
       response["body"] = _render_with_jinja(options["template_dir"],
-        *response["body"], session=request.get("session"))
+        *response["body"], session=request.get("session"),
+                           flash=request.get("flash"))
       return response
     else:
       return response
   return wrapped
 
-def _render_with_jinja(template_dir, template, data, session={}):
+def _render_with_jinja(template_dir, template, data, session={}, flash={}):
   """
   Looks for the template in template_dir, and passes data to it.  Also adds a
-  session key to the data, if session are enabled.
+  session key to the data, if sessions are enabled, and a flash key if the
+  flash middleware is being used.
   """
   env = Environment(loader=FileSystemLoader(template_dir))
 
   # Add session key to data, if sessions are enabled.
   if session is not None:
     data["session"] = session
+  if flash is not None:
+    data["flash"] = flash
 
   # a filter for dealing with unicode strings
   env.filters['d'] = lambda s: s.decode('utf-8') if s else ''
