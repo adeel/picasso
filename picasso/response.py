@@ -1,10 +1,13 @@
 "Functions that turn various objects into Pack responses."
 
 import collections
-from pack.util.response import skeleton, with_body, with_content_type
+from pack.util.response import with_body, with_content_type
 
 def render(response, request):
   "Render the object into a Pack response suitable for the given Pack request."
+
+  if not response:
+    return
 
   if not isinstance(response, dict):
     if callable(response):

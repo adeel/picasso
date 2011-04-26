@@ -1,7 +1,10 @@
 import collections
+
+from pack.util.response import with_body, with_status
 from routes.base import Route
 from routes.mapper import Mapper as RouteMapper
-import response
+
+from picasso import response
 
 def route(request, *routes):
   """
@@ -10,10 +13,11 @@ def route(request, *routes):
   _compile_route.
   """
   for route in routes:
-    response = route(request)
+    response = route(request.copy())
     if response:
       return response
-  return {"status": 404}
+
+  return with_status(with_body("Not Found"), 404)
 
 methods = ["get", "post", "put", "delete", "head", "any"]
 GET, POST, PUT, DELETE, HEAD, ANY = [lambda p, b, m=m:
