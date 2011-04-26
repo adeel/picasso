@@ -16,11 +16,6 @@ def wrap_jinja(app, options={}):
   If sessions are enabled, a "session" key will be added to the data and sent
   to the template.
 
-  Note that it adds a filter to the Jinja environment called 'd', which can
-  be used to output unicode strings.  (It decodes strings as UTF-8.)
-
-    <h1>{{ product.name|d|e }}</h1>
-
   Takes a template_dir option, which should be the path to your templates.
   """
 
@@ -60,6 +55,4 @@ def _render_with_jinja(template_dir, template, data, session={}, flash={}):
   if flash is not None:
     data["flash"] = flash
 
-  # a filter for dealing with unicode strings
-  env.filters['d'] = lambda s: s.decode('utf-8') if s else ''
   return env.get_template(template + '.html').render(data).encode('utf-8')
