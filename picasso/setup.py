@@ -6,6 +6,7 @@ from pack.middleware.cookies import *
 from pack.middleware.session import *
 from picasso.middleware.jinja import *
 from picasso.middleware.flash import *
+from picasso.middleware.not_found import *
 
 def setup_api(routes):
   """
@@ -18,7 +19,7 @@ def setup_api(routes):
   Does not add cookies and sessions.
   """
   app = routes
-  for middleware in [wrap_nested_params, wrap_params]:
+  for middleware in [wrap_not_found, wrap_nested_params, wrap_params]:
     app = middleware(app)
   return app
 
@@ -36,6 +37,7 @@ def setup_app(routes, options={}):
   """
 
   app = routes
+  app = wrap_not_found(app)
   app = wrap_jinja(app, options.get("views", {}))
   app = wrap_flash(app)
   app = wrap_session(app, options.get("session", {}))

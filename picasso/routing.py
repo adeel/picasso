@@ -17,8 +17,6 @@ def route(request, *routes):
     if response:
       return response
 
-  return with_status(with_body("Not Found"), 404)
-
 methods = ["get", "post", "put", "delete", "head", "any"]
 GET, POST, PUT, DELETE, HEAD, ANY = [lambda p, b, m=m:
   _compile_route(m, p, b) for m in methods]
