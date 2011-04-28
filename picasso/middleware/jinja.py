@@ -16,10 +16,11 @@ def wrap_jinja(app, options={}):
   If sessions are enabled, a "session" key will be added to the data and sent
   to the template.
 
-  Takes a template_dir option, which should be the path to your templates.
+  Takes a template_dir option, which should be the path to your templates, and
+  a config option, which can be a dict that will be passed to all your views.
   """
 
-  options = dict({"template_dir": "./"}, **options)
+  options = dict({"template_dir": "./", "config": {}}, **options)
 
   template_dir = options["template_dir"]
   if not os.path.isdir(template_dir):
@@ -35,19 +36,22 @@ def wrap_jinja(app, options={}):
 
       response["body"] = _render_with_jinja(options["template_dir"],
         *response["body"], session=request.get("session"),
-                           flash=request.get("flash"))
+                           flash=request.get("flash"),
+                           config=options.get("config"))
       return response
     else:
       return response
   return wrapped
 
-def _render_with_jinja(template_dir, template, data, session={}, flash={}):
+def _render_with_jinja(template_dir, template, data, session={}, flash={},
+                       config={}):
   """
   Looks for the template in template_dir, and passes data to it.  Also adds a
   session key to the data, if sessions are enabled, and a flash key if the
   flash middleware is being used.
   """
   env = Environment(loader=FileSystemLoader(template_dir))
+  data = dict(data, **config)
 
   # Add session key to data, if sessions are enabled.
   if session is not None:
