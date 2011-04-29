@@ -21,7 +21,7 @@ methods = ["get", "post", "put", "delete", "head", "any"]
 GET, POST, PUT, DELETE, HEAD, ANY = [lambda p, b, m=m:
   _compile_route(m, p, b) for m in methods]
 
-not_found = lambda b: GET('/{url:.*}', b)
+not_found = lambda b: ANY('/{url:.*}', b)
 
 def _compile_route(method, path, body):
   """
