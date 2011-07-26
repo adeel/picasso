@@ -83,7 +83,7 @@ def recursive_merge(x, y):
     if isinstance(val, dict):
       if not z.has_key(key):
         z[key] = {}
-      z[key] = _recursive_merge(z[key], val)
+      z[key] = recursive_merge(z[key], val)
     else:
       z[key] = val
   return z
