@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>response.py</title>
+  <link rel="stylesheet" href="pycco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  
+  <table cellspacing=0 cellpadding=0>
+  <thead>
+    <tr>
+      <th class=docs><h1>response.py</h1></th>
+      <th class=code></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr id='section-0'>
+      <td class=docs>
+        <div class="octowrap">
+          <a class="octothorpe" href="#section-0">#</a>
+        </div>
+        <p>Generating Pack responses.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><div class="highlight"><pre><span class="kn">import</span> <span class="nn">collections</span>
+<span class="kn">from</span> <span class="nn">pack.util.response</span> <span class="kn">import</span> <span class="n">with_body</span><span class="p">,</span> <span class="n">with_content_type</span></pre></div></pre></div>
+      </td>
+    </tr><tr id='section-1'>
+      <td class=docs>
+        <div class="octowrap">
+          <a class="octothorpe" href="#section-1">#</a>
+        </div>
+        <p>Render the object into a Pack response suitable for the given Pack request.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><div class="highlight"><pre><span class="k">def</span> <span class="nf">render</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
+  <span class="k">if</span> <span class="ow">not</span> <span class="n">response</span><span class="p">:</span>
+    <span class="k">return</span>
+
+  <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span></pre></div></pre></div>
+      </td>
+    </tr><tr id='section-2'>
+      <td class=docs>
+        <div class="octowrap">
+          <a class="octothorpe" href="#section-2">#</a>
+        </div>
+        <p>If the response is a function, call it and render the result.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><div class="highlight"><pre>    <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="n">response</span><span class="p">):</span>
+      <span class="k">return</span> <span class="n">render</span><span class="p">(</span>
+        <span class="n">response</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="o">**</span><span class="n">request</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;route_params&quot;</span><span class="p">,</span> <span class="p">{})),</span> <span class="n">request</span><span class="p">)</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">with_body</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+
+  <span class="n">response</span><span class="p">[</span><span class="s">&quot;body&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_render_body</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;body&quot;</span><span class="p">),</span> <span class="n">request</span><span class="p">)</span></pre></div></pre></div>
+      </td>
+    </tr><tr id='section-3'>
+      <td class=docs>
+        <div class="octowrap">
+          <a class="octothorpe" href="#section-3">#</a>
+        </div>
+        <p>Default content_type is text/html.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><div class="highlight"><pre>  <span class="k">if</span> <span class="ow">not</span> <span class="n">response</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;headers&quot;</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;content_type&quot;</span><span class="p">):</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">with_content_type</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="s">&quot;text/html&quot;</span><span class="p">)</span>
+
+  <span class="k">return</span> <span class="n">response</span></pre></div></pre></div>
+      </td>
+    </tr><tr id='section-4'>
+      <td class=docs>
+        <div class="octowrap">
+          <a class="octothorpe" href="#section-4">#</a>
+        </div>
+        
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><div class="highlight"><pre><span class="k">def</span> <span class="nf">_render_body</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
+  <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="nb">unicode</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">obj</span>
+  <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="nb">file</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">obj</span>
+  <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">collections</span><span class="o">.</span><span class="n">Iterable</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">obj</span>
+
+</pre></div></pre></div>
+      </td>
+    </tr>
+  </table>
+</div>
+</body>

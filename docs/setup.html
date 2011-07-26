@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>setup.py</title>
+  <link rel="stylesheet" href="pycco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  
+  <table cellspacing=0 cellpadding=0>
+  <thead>
+    <tr>
+      <th class=docs><h1>setup.py</h1></th>
+      <th class=code></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr id='section-0'>
+      <td class=docs>
+        <div class="octowrap">
+          <a class="octothorpe" href="#section-0">#</a>
+        </div>
+        <p>Some functions to create Pack apps from routes.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><div class="highlight"><pre><span class="kn">from</span> <span class="nn">pack.middleware.params</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">pack.middleware.nested_params</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">pack.middleware.cookies</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">pack.middleware.session</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">picasso.middleware.jinja</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">picasso.middleware.flash</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">picasso.middleware.not_found</span> <span class="kn">import</span> <span class="o">*</span></pre></div></pre></div>
+      </td>
+    </tr><tr id='section-1'>
+      <td class=docs>
+        <div class="octowrap">
+          <a class="octothorpe" href="#section-1">#</a>
+        </div>
+        <p>Generates a Pack app from the given routes that can be used for creating
+a web API.  Adds the following middleware:</p>
+<ul>
+<li>params</li>
+<li>nested_params</li>
+</ul>
+<p>(Does not add cookies and sessions.)</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><div class="highlight"><pre><span class="k">def</span> <span class="nf">setup_api</span><span class="p">(</span><span class="n">routes</span><span class="p">):</span>
+  <span class="n">app</span> <span class="o">=</span> <span class="n">routes</span>
+  <span class="k">for</span> <span class="n">middleware</span> <span class="ow">in</span> <span class="p">[</span><span class="n">wrap_not_found</span><span class="p">,</span> <span class="n">wrap_nested_params</span><span class="p">,</span> <span class="n">wrap_params</span><span class="p">]:</span>
+    <span class="n">app</span> <span class="o">=</span> <span class="n">middleware</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+  <span class="k">return</span> <span class="n">app</span></pre></div></pre></div>
+      </td>
+    </tr><tr id='section-2'>
+      <td class=docs>
+        <div class="octowrap">
+          <a class="octothorpe" href="#section-2">#</a>
+        </div>
+        <p>Generates a Pack app from the given routes that are suitable for a
+typical website or web application.  Adds the following middleware:</p>
+<ul>
+<li>params</li>
+<li>nested_params</li>
+<li>sessions</li>
+</ul>
+<p>Options can contain "views" and "session" keys which will be passed to the
+jinja and session middlewares, respectively.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><div class="highlight"><pre><span class="k">def</span> <span class="nf">setup_app</span><span class="p">(</span><span class="n">routes</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="p">{}):</span>
+  <span class="n">app</span> <span class="o">=</span> <span class="n">routes</span>
+  <span class="n">app</span> <span class="o">=</span> <span class="n">wrap_not_found</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+  <span class="n">app</span> <span class="o">=</span> <span class="n">wrap_jinja</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;views&quot;</span><span class="p">,</span> <span class="p">{}))</span>
+  <span class="n">app</span> <span class="o">=</span> <span class="n">wrap_flash</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+  <span class="n">app</span> <span class="o">=</span> <span class="n">wrap_session</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">options</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;session&quot;</span><span class="p">,</span> <span class="p">{}))</span>
+  <span class="n">app</span> <span class="o">=</span> <span class="n">setup_api</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
+  <span class="k">return</span> <span class="n">app</span>
+
+</pre></div></pre></div>
+      </td>
+    </tr>
+  </table>
+</div>
+</body>

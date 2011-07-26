@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>__init__.py</title>
+  <link rel="stylesheet" href="pycco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  
+  <table cellspacing=0 cellpadding=0>
+  <thead>
+    <tr>
+      <th class=docs><h1>__init__.py</h1></th>
+      <th class=code></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr id='section-0'>
+      <td class=docs>
+        <div class="octowrap">
+          <a class="octothorpe" href="#section-0">#</a>
+        </div>
+        
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><div class="highlight"><pre><span class="kn">import</span> <span class="nn">pack</span>
+
+<span class="kn">from</span> <span class="nn">setup</span> <span class="kn">import</span> <span class="n">setup_api</span><span class="p">,</span> <span class="n">setup_app</span>
+<span class="kn">from</span> <span class="nn">routing</span> <span class="kn">import</span> <span class="n">GET</span><span class="p">,</span> <span class="n">POST</span><span class="p">,</span> <span class="n">PUT</span><span class="p">,</span> <span class="n">DELETE</span><span class="p">,</span> <span class="n">HEAD</span><span class="p">,</span> <span class="n">ANY</span>
+
+<span class="kn">from</span> <span class="nn">pack.util.response</span> <span class="kn">import</span> <span class="n">redirect</span><span class="p">,</span> <span class="n">file_response</span></pre></div></pre></div>
+      </td>
+    </tr><tr id='section-1'>
+      <td class=docs>
+        <div class="octowrap">
+          <a class="octothorpe" href="#section-1">#</a>
+        </div>
+        <p>Create a Pack app from a list of compiled routes (see
+routing._compile_route).</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><div class="highlight"><pre><span class="k">def</span> <span class="nf">setup_routes</span><span class="p">(</span><span class="o">*</span><span class="n">routes</span><span class="p">):</span>
+  <span class="k">return</span> <span class="k">lambda</span> <span class="n">req</span><span class="p">:</span> <span class="n">routing</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="n">req</span><span class="p">,</span> <span class="o">*</span><span class="n">routes</span><span class="p">)</span>
+
+</pre></div></pre></div>
+      </td>
+    </tr>
+  </table>
+</div>
+</body>

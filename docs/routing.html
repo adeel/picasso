@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=utf-8">
+  <title>routing.py</title>
+  <link rel="stylesheet" href="pycco.css">
+</head>
+<body>
+<div id='container'>
+  <div id="background"></div>
+  
+  <table cellspacing=0 cellpadding=0>
+  <thead>
+    <tr>
+      <th class=docs><h1>routing.py</h1></th>
+      <th class=code></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr id='section-0'>
+      <td class=docs>
+        <div class="octowrap">
+          <a class="octothorpe" href="#section-0">#</a>
+        </div>
+        
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><div class="highlight"><pre><span class="kn">import</span> <span class="nn">collections</span>
+
+<span class="kn">from</span> <span class="nn">pack.util.response</span> <span class="kn">import</span> <span class="n">with_body</span><span class="p">,</span> <span class="n">with_status</span>
+<span class="kn">from</span> <span class="nn">routes.base</span> <span class="kn">import</span> <span class="n">Route</span>
+<span class="kn">from</span> <span class="nn">routes.mapper</span> <span class="kn">import</span> <span class="n">Mapper</span> <span class="k">as</span> <span class="n">RouteMapper</span>
+
+<span class="kn">from</span> <span class="nn">picasso</span> <span class="kn">import</span> <span class="n">response</span></pre></div></pre></div>
+      </td>
+    </tr><tr id='section-1'>
+      <td class=docs>
+        <div class="octowrap">
+          <a class="octothorpe" href="#section-1">#</a>
+        </div>
+        <p>Try to apply each route to the given request, returning the first nonempty
+response.  The routes need to have been compiled to functions with
+_compile_route.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><div class="highlight"><pre><span class="k">def</span> <span class="nf">route</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="o">*</span><span class="n">routes</span><span class="p">):</span>
+  <span class="k">for</span> <span class="n">route</span> <span class="ow">in</span> <span class="n">routes</span><span class="p">:</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">route</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
+    <span class="k">if</span> <span class="n">response</span><span class="p">:</span>
+      <span class="k">return</span> <span class="n">response</span></pre></div></pre></div>
+      </td>
+    </tr><tr id='section-2'>
+      <td class=docs>
+        <div class="octowrap">
+          <a class="octothorpe" href="#section-2">#</a>
+        </div>
+        <p>Functions for each method that generate routes from a path and response.
+Supported methods: GET, POST, PUT, DELETE, and HEAD.
+ANY will match any method.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><div class="highlight"><pre><span class="n">methods</span> <span class="o">=</span> <span class="p">[</span><span class="s">&quot;get&quot;</span><span class="p">,</span> <span class="s">&quot;post&quot;</span><span class="p">,</span> <span class="s">&quot;put&quot;</span><span class="p">,</span> <span class="s">&quot;delete&quot;</span><span class="p">,</span> <span class="s">&quot;head&quot;</span><span class="p">,</span> <span class="s">&quot;any&quot;</span><span class="p">]</span>
+<span class="n">GET</span><span class="p">,</span> <span class="n">POST</span><span class="p">,</span> <span class="n">PUT</span><span class="p">,</span> <span class="n">DELETE</span><span class="p">,</span> <span class="n">HEAD</span><span class="p">,</span> <span class="n">ANY</span> <span class="o">=</span> <span class="p">[</span><span class="k">lambda</span> <span class="n">p</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">m</span><span class="o">=</span><span class="n">m</span><span class="p">:</span>
+  <span class="n">compile_route</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">methods</span><span class="p">]</span></pre></div></pre></div>
+      </td>
+    </tr><tr id='section-3'>
+      <td class=docs>
+        <div class="octowrap">
+          <a class="octothorpe" href="#section-3">#</a>
+        </div>
+        <p>Generates a route that matches any URL and returns the given body.
+You can add it as your last route to get a custom 404 page.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><div class="highlight"><pre><span class="k">def</span> <span class="nf">not_found</span><span class="p">(</span><span class="n">body</span><span class="p">):</span>
+  <span class="k">return</span> <span class="n">ANY</span><span class="p">(</span><span class="s">&#39;/{url:.*}&#39;</span><span class="p">,</span> <span class="n">body</span><span class="p">)</span></pre></div></pre></div>
+      </td>
+    </tr><tr id='section-4'>
+      <td class=docs>
+        <div class="octowrap">
+          <a class="octothorpe" href="#section-4">#</a>
+        </div>
+        <p>Compile the route into a Pack app that will return the body given if and
+only if a matching route is found.  Otherwise it will return None.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><div class="highlight"><pre><span class="k">def</span> <span class="nf">compile_route</span><span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">body</span><span class="p">):</span></pre></div></pre></div>
+      </td>
+    </tr><tr id='section-5'>
+      <td class=docs>
+        <div class="octowrap">
+          <a class="octothorpe" href="#section-5">#</a>
+        </div>
+        
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><div class="highlight"><pre>  <span class="k">def</span> <span class="nf">app</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">body</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span>
+  <span class="k">return</span> <span class="n">if_method</span><span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="n">if_route</span><span class="p">(</span><span class="n">prepare_route</span><span class="p">(</span><span class="n">path</span><span class="p">),</span> <span class="n">app</span><span class="p">))</span></pre></div></pre></div>
+      </td>
+    </tr><tr id='section-6'>
+      <td class=docs>
+        <div class="octowrap">
+          <a class="octothorpe" href="#section-6">#</a>
+        </div>
+        <p>Call the app if the method matches the request.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><div class="highlight"><pre><span class="k">def</span> <span class="nf">if_method</span><span class="p">(</span><span class="n">method</span><span class="p">,</span> <span class="n">app</span><span class="p">):</span></pre></div></pre></div>
+      </td>
+    </tr><tr id='section-7'>
+      <td class=docs>
+        <div class="octowrap">
+          <a class="octothorpe" href="#section-7">#</a>
+        </div>
+        
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><div class="highlight"><pre>  <span class="k">def</span> <span class="nf">wrapped</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">method</span> <span class="ow">or</span> <span class="n">method</span> <span class="o">==</span> <span class="n">request</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;method&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">method</span> <span class="o">==</span> <span class="s">&quot;any&quot;</span><span class="p">:</span>
+      <span class="k">return</span> <span class="n">app</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s">&quot;get&quot;</span> <span class="ow">and</span> <span class="n">request</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;method&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s">&quot;head&quot;</span><span class="p">:</span>
+      <span class="n">response</span> <span class="o">=</span> <span class="n">app</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+      <span class="k">if</span> <span class="n">response</span><span class="p">:</span>
+        <span class="n">response</span><span class="p">[</span><span class="s">&quot;body&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">None</span>
+      <span class="k">return</span> <span class="n">response</span>
+  <span class="k">return</span> <span class="n">wrapped</span></pre></div></pre></div>
+      </td>
+    </tr><tr id='section-8'>
+      <td class=docs>
+        <div class="octowrap">
+          <a class="octothorpe" href="#section-8">#</a>
+        </div>
+        <p>Call the app if the route matches the request.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><div class="highlight"><pre><span class="k">def</span> <span class="nf">if_route</span><span class="p">(</span><span class="n">route</span><span class="p">,</span> <span class="n">app</span><span class="p">):</span></pre></div></pre></div>
+      </td>
+    </tr><tr id='section-9'>
+      <td class=docs>
+        <div class="octowrap">
+          <a class="octothorpe" href="#section-9">#</a>
+        </div>
+        
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><div class="highlight"><pre>  <span class="k">def</span> <span class="nf">wrapped</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="n">route_matches</span><span class="p">(</span><span class="n">route</span><span class="p">,</span> <span class="n">request</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">params</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+      <span class="k">return</span> <span class="n">app</span><span class="p">(</span><span class="n">set_route_params</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">params</span><span class="p">))</span>
+  <span class="k">return</span> <span class="n">wrapped</span></pre></div></pre></div>
+      </td>
+    </tr><tr id='section-10'>
+      <td class=docs>
+        <div class="octowrap">
+          <a class="octothorpe" href="#section-10">#</a>
+        </div>
+        <p>Set the "route_params" and "params" keys in the request.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><div class="highlight"><pre><span class="k">def</span> <span class="nf">set_route_params</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="n">params</span><span class="p">):</span>
+  <span class="k">return</span> <span class="n">recursive_merge</span><span class="p">(</span><span class="n">request</span><span class="p">,</span> <span class="p">{</span><span class="s">&quot;route_params&quot;</span><span class="p">:</span> <span class="n">params</span><span class="p">,</span> <span class="s">&quot;params&quot;</span><span class="p">:</span> <span class="n">params</span><span class="p">})</span></pre></div></pre></div>
+      </td>
+    </tr><tr id='section-11'>
+      <td class=docs>
+        <div class="octowrap">
+          <a class="octothorpe" href="#section-11">#</a>
+        </div>
+        <p>Return the params of the route matching the request, if there is one.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><div class="highlight"><pre><span class="k">def</span> <span class="nf">route_matches</span><span class="p">(</span><span class="n">route</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
+  <span class="n">m</span> <span class="o">=</span> <span class="n">RouteMapper</span><span class="p">()</span>
+  <span class="n">m</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="n">route</span><span class="p">])</span>
+  <span class="k">return</span> <span class="n">m</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">request</span><span class="p">[</span><span class="s">&quot;uri&quot;</span><span class="p">])</span></pre></div></pre></div>
+      </td>
+    </tr><tr id='section-12'>
+      <td class=docs>
+        <div class="octowrap">
+          <a class="octothorpe" href="#section-12">#</a>
+        </div>
+        <p>Returns an instance of routes.base.Route (from the Routes package).  If
+route is a tuple, the first item should be a route and the second should be
+a dict with conditions on the params in the route.</p>
+<pre><code>prepare_route("products/view/:id")
+prepare_route(("products/view/:id", {"id": r"\d+"}))
+</code></pre>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><div class="highlight"><pre><span class="k">def</span> <span class="nf">prepare_route</span><span class="p">(</span><span class="n">route</span><span class="p">):</span>
+  <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">route</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">route</span><span class="p">,</span> <span class="nb">unicode</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">Route</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="n">route</span><span class="p">)</span>
+  <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">route</span><span class="p">,</span> <span class="n">collections</span><span class="o">.</span><span class="n">Iterable</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">Route</span><span class="p">(</span><span class="bp">None</span><span class="p">,</span> <span class="n">route</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">requirements</span><span class="o">=</span><span class="n">route</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span></pre></div></pre></div>
+      </td>
+    </tr><tr id='section-13'>
+      <td class=docs>
+        <div class="octowrap">
+          <a class="octothorpe" href="#section-13">#</a>
+        </div>
+        <p>Merge two dictionaries recursively.</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><div class="highlight"><pre><span class="k">def</span> <span class="nf">recursive_merge</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+  <span class="n">z</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+  <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">y</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+      <span class="k">if</span> <span class="ow">not</span> <span class="n">z</span><span class="o">.</span><span class="n">has_key</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
+        <span class="n">z</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+      <span class="n">z</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">_recursive_merge</span><span class="p">(</span><span class="n">z</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="n">val</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="n">z</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
+  <span class="k">return</span> <span class="n">z</span>
+
+</pre></div></pre></div>
+      </td>
+    </tr>
+  </table>
+</div>
+</body>

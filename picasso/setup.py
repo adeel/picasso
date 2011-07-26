@@ -1,4 +1,4 @@
-"Functions that create Pack apps from routes."
+# Some functions to create Pack apps from routes.
 
 from pack.middleware.params import *
 from pack.middleware.nested_params import *
@@ -8,34 +8,29 @@ from picasso.middleware.jinja import *
 from picasso.middleware.flash import *
 from picasso.middleware.not_found import *
 
+# Generates a Pack app from the given routes that can be used for creating
+# a web API.  Adds the following middleware:
+#
+#   - params
+#   - nested_params
+#
+# (Does not add cookies and sessions.)
 def setup_api(routes):
-  """
-  Generates a Pack app from the given routes that can be used for creating
-  a web API.  Adds the following middleware:
-
-    -- params
-    -- nested_params
-
-  Does not add cookies and sessions.
-  """
   app = routes
   for middleware in [wrap_not_found, wrap_nested_params, wrap_params]:
     app = middleware(app)
   return app
 
+# Generates a Pack app from the given routes that are suitable for a
+# typical website or web application.  Adds the following middleware:
+#
+#   - params
+#   - nested_params
+#   - sessions
+#
+# Options can contain "views" and "session" keys which will be passed to the
+# jinja and session middlewares, respectively.
 def setup_app(routes, options={}):
-  """
-  Generates a Pack app from the given routes that can be used for creating
-  a typical website or web application.  Adds the following middleware:
-
-    -- params
-    -- nested_params
-    -- sessions
-
-  Options can contain "views" and "session" keys which will be passed to the
-  jinja and session middlewares, respectively.
-  """
-
   app = routes
   app = wrap_not_found(app)
   app = wrap_jinja(app, options.get("views", {}))
