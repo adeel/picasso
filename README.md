@@ -31,6 +31,18 @@ Here's a simple example demonstrating the use of routes, forms, sessions and red
 
 Here's an [example blog](https://github.com/adeel/picasso-blog-example) written with Picasso.
 
+## Installation
+
+If you have pip, run
+
+    $ pip install Picasso
+
+or get the latest snapshot from Github with
+
+    $ git clone git://github.com/adeel/picasso.git
+    $ cd picasso
+    $ python setup.py install
+
 ## License
 
 Copyright (c) 2011 Adeel Ahmad Khan <adeel@adeel.ru>.

@@ -4,7 +4,7 @@ desc = open('README.md').read()
 
 setup(
   name='Picasso',
-  version='0.0.1',
+  version='0.0.2',
   description="A simple web framework for Python.",
   long_description=desc,
   url='http://adeel.github.com/picasso',
