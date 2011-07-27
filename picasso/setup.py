@@ -4,8 +4,8 @@ from pump.middleware.params import *
 from pump.middleware.nested_params import *
 from pump.middleware.cookies import *
 from pump.middleware.session import *
-from picasso.middleware.jinja import *
-from picasso.middleware.flash import *
+from pump_jinja import *
+from pump_flash import *
 from picasso.middleware.not_found import *
 
 # Generates a Pump app from the given routes that can be used for creating

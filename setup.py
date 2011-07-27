@@ -11,6 +11,7 @@ setup(
   author='Adeel Ahmad Khan',
   author_email='adeel@adeel.ru',
   packages=['picasso', 'picasso.middleware'],
+  requires=["pump", "pump-flash", "pump-jinja", "routes"],
   license='MIT',
   classifiers=[
     'Topic :: Internet :: WWW/HTTP :: WSGI',
