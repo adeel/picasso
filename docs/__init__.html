@@ -25,7 +25,24 @@
         
       </td>
       <td class=code>
-        <div class='highlight'><pre><div class="highlight"><pre>
+        <div class='highlight'><pre><div class="highlight"><pre><span class="kn">import</span> <span class="nn">pump</span>
+
+<span class="kn">from</span> <span class="nn">setup</span> <span class="kn">import</span> <span class="n">setup_api</span><span class="p">,</span> <span class="n">setup_app</span>
+<span class="kn">from</span> <span class="nn">routing</span> <span class="kn">import</span> <span class="n">GET</span><span class="p">,</span> <span class="n">POST</span><span class="p">,</span> <span class="n">PUT</span><span class="p">,</span> <span class="n">DELETE</span><span class="p">,</span> <span class="n">HEAD</span><span class="p">,</span> <span class="n">ANY</span>
+
+<span class="kn">from</span> <span class="nn">pump.util.response</span> <span class="kn">import</span> <span class="n">redirect</span><span class="p">,</span> <span class="n">file_response</span></pre></div></pre></div>
+      </td>
+    </tr><tr id='section-1'>
+      <td class=docs>
+        <div class="octowrap">
+          <a class="octothorpe" href="#section-1">#</a>
+        </div>
+        <p>Create a Pump app from a list of compiled routes (see
+routing.compile_route).</p>
+      </td>
+      <td class=code>
+        <div class='highlight'><pre><div class="highlight"><pre><span class="k">def</span> <span class="nf">setup_routes</span><span class="p">(</span><span class="o">*</span><span class="n">routes</span><span class="p">):</span>
+  <span class="k">return</span> <span class="k">lambda</span> <span class="n">req</span><span class="p">:</span> <span class="n">routing</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="n">req</span><span class="p">,</span> <span class="o">*</span><span class="n">routes</span><span class="p">)</span>
 
 </pre></div></pre></div>
       </td>
