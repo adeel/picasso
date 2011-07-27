@@ -1,6 +1,6 @@
 import collections
 
-from pack.util.response import with_body, with_status
+from pump.util.response import with_body, with_status
 from routes.base import Route
 from routes.mapper import Mapper as RouteMapper
 
@@ -27,7 +27,7 @@ GET, POST, PUT, DELETE, HEAD, ANY = [lambda p, b, m=m:
 def not_found(body):
   return ANY('/{url:.*}', body)
 
-# Compile the route into a Pack app that will return the body given if and
+# Compile the route into a Pump app that will return the body given if and
 # only if a matching route is found.  Otherwise it will return None.
 def compile_route(method, path, body):
   def app(request):

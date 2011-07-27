@@ -1,9 +1,9 @@
-# Generating Pack responses.
+# Generating Pump responses.
 
 import collections
-from pack.util.response import with_body, with_content_type
+from pump.util.response import with_body, with_content_type
 
-# Render the object into a Pack response suitable for the given Pack request.
+# Render the object into a Pump response suitable for the given Pump request.
 def render(response, request):
   if not response:
     return

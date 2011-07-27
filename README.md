@@ -1,22 +1,32 @@
-from picasso import *
+# Picasso
 
-def home(req):
-  if not req["session"].get("user"):
-    return redirect("/login")
-  return "<h1>Welcome back, %s!</h1>" % req["session"]["user"]
+Picasso is a simple web framework built on [Pump](http://adeel.github.com/pump).
 
-def login(req):
-  return "<form method='post'><input type='submit' value='login' /></form>"
+## Examples
 
-def login_post(req):
-  req["session"]["user"] = "James"
-  return redirect("/")
+Here's a simple example demonstrating the use of routes, forms, sessions and redirects.
 
-routes = setup_routes(
-  GET("/", home),
-  GET("/login", login),
-  POST("/login", login_post),
-  routing.not_found("<h1>Not Found</h1>"))
+    from picasso import *
 
-app = setup_app(routes)
-pack.adapters.serve_with_paste(app)
+    def home(req):
+      if not req["session"].get("user"):
+        return redirect("/login")
+      return "<h1>Welcome back, %s!</h1>" % req["session"]["user"]
+
+    def login(req):
+      return "<form method='post'><input type='submit' value='login' /></form>"
+
+    def login_post(req):
+      req["session"]["user"] = "James"
+      return redirect("/")
+
+    routes = setup_routes(
+      GET("/", home),
+      GET("/login", login),
+      POST("/login", login_post),
+      routing.not_found("<h1>Not Found</h1>"))
+
+    app = setup_app(routes)
+    pump.adapters.serve_with_paste(app)
+
+Here's an [example blog](https://github.com/adeel/picasso-blog-example) written with Picasso.

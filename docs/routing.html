@@ -27,7 +27,7 @@
       <td class=code>
         <div class='highlight'><pre><div class="highlight"><pre><span class="kn">import</span> <span class="nn">collections</span>
 
-<span class="kn">from</span> <span class="nn">pack.util.response</span> <span class="kn">import</span> <span class="n">with_body</span><span class="p">,</span> <span class="n">with_status</span>
+<span class="kn">from</span> <span class="nn">pump.util.response</span> <span class="kn">import</span> <span class="n">with_body</span><span class="p">,</span> <span class="n">with_status</span>
 <span class="kn">from</span> <span class="nn">routes.base</span> <span class="kn">import</span> <span class="n">Route</span>
 <span class="kn">from</span> <span class="nn">routes.mapper</span> <span class="kn">import</span> <span class="n">Mapper</span> <span class="k">as</span> <span class="n">RouteMapper</span>
 
@@ -80,7 +80,7 @@ You can add it as your last route to get a custom 404 page.</p>
         <div class="octowrap">
           <a class="octothorpe" href="#section-4">#</a>
         </div>
-        <p>Compile the route into a Pack app that will return the body given if and
+        <p>Compile the route into a Pump app that will return the body given if and
 only if a matching route is found.  Otherwise it will return None.</p>
       </td>
       <td class=code>
@@ -207,7 +207,7 @@ prepare_route(("products/view/:id", {"id": r"\d+"}))
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
       <span class="k">if</span> <span class="ow">not</span> <span class="n">z</span><span class="o">.</span><span class="n">has_key</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
         <span class="n">z</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
-      <span class="n">z</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">_recursive_merge</span><span class="p">(</span><span class="n">z</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="n">val</span><span class="p">)</span>
+      <span class="n">z</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">recursive_merge</span><span class="p">(</span><span class="n">z</span><span class="p">[</span><span class="n">key</span><span class="p">],</span> <span class="n">val</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
       <span class="n">z</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
   <span class="k">return</span> <span class="n">z</span>

@@ -1,14 +1,14 @@
-# Some functions to create Pack apps from routes.
+# Some functions to create Pump apps from routes.
 
-from pack.middleware.params import *
-from pack.middleware.nested_params import *
-from pack.middleware.cookies import *
-from pack.middleware.session import *
+from pump.middleware.params import *
+from pump.middleware.nested_params import *
+from pump.middleware.cookies import *
+from pump.middleware.session import *
 from picasso.middleware.jinja import *
 from picasso.middleware.flash import *
 from picasso.middleware.not_found import *
 
-# Generates a Pack app from the given routes that can be used for creating
+# Generates a Pump app from the given routes that can be used for creating
 # a web API.  Adds the following middleware:
 #
 #   - params
@@ -21,7 +21,7 @@ def setup_api(routes):
     app = middleware(app)
   return app
 
-# Generates a Pack app from the given routes that are suitable for a
+# Generates a Pump app from the given routes that are suitable for a
 # typical website or web application.  Adds the following middleware:
 #
 #   - params
