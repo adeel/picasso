@@ -30,3 +30,9 @@ Here's a simple example demonstrating the use of routes, forms, sessions and red
     pump.adapters.serve_with_paste(app)
 
 Here's an [example blog](https://github.com/adeel/picasso-blog-example) written with Picasso.
+
+## License
+
+Copyright (c) 2011 Adeel Ahmad Khan <adeel@adeel.ru>.
+
+MIT license.
