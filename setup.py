@@ -1,17 +1,14 @@
 from setuptools import setup
 
-desc = open('README.md').read()
-
 setup(
   name='Picasso',
   version='0.0.2',
   description="A simple web framework for Python.",
-  long_description=desc,
   url='http://adeel.github.com/picasso',
   author='Adeel Ahmad Khan',
   author_email='adeel@adeel.ru',
   packages=['picasso', 'picasso.middleware'],
-  requires=["pump", "pump-flash", "pump-jinja", "routes"],
+  requires=["pump", "pump_flash", "pump_jinja", "routes"],
   license='MIT',
   classifiers=[
     'Topic :: Internet :: WWW/HTTP :: WSGI',
