@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
   name='Picasso',
-  version='0.0.2',
+  version='0.0.3',
   description="A simple web framework for Python.",
   url='http://adeel.github.com/picasso',
   author='Adeel Ahmad Khan',
